@@ -1,6 +1,6 @@
 - id: yamlr-heal
-  name: Yamlr Manifest Auto-Healer
-  description: Fast, comment-preserving auto-repair for Kubernetes manifests before commit.
+  name: Yamlr Manifest Reconciler
+  description: Reconcile dependencies and repair Kubernetes configurations with comment preservation.
   entry: yamlr heal
   args: ["--apply"]
   language: system

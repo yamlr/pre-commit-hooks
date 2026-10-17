@@ -1,6 +1,8 @@
-# Yamlr Pre-Commit Hooks
+# Yamlr: The Kubernetes Configuration Resolution Plane
 
-Official pre-commit hooks for [Yamlr](https://yamlr.dev) — the autonomous Kubernetes manifest resolution and auto-healing engine.
+> Reconcile and repair Kubernetes configurations before deployment.
+
+Official pre-commit hooks for [Yamlr](https://yamlr.dev). Runs high-speed schema validation, dependency reconciliation, and comment-preserving repairs before commit.
 
 ## Prerequisites
 
