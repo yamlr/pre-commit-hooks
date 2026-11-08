@@ -1,58 +1,65 @@
-# Yamlr: The Kubernetes Configuration Resolution Plane
+# Official Pre-Commit Hooks for Yamlr
 
-> Reconcile and repair Kubernetes configurations before deployment.
+[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white&style=flat-square)](https://pre-commit.com)
+[![Yamlr Version](https://img.shields.io/github/v/release/yamlr/yamlr?style=flat-square&color=blue)](https://github.com/yamlr/yamlr/releases)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-orange?style=flat-square)](https://github.com/yamlr/yamlr/blob/main/LICENSE)
 
-Official pre-commit hooks for [Yamlr](https://yamlr.dev). Runs high-speed schema validation, dependency reconciliation, and comment-preserving repairs before commit.
-
-## Prerequisites
-
-Yamlr pre-commit hooks run the native `yamlr` CLI directly on your developer workstation. Ensure `yamlr` is installed:
-
-### macOS & Linux
-```bash
-curl -fsSL https://get.yamlr.dev/install.sh | bash
-# or via Homebrew:
-brew install yamlr/tap/yamlr
-```
-
-### Windows (PowerShell)
-```powershell
-irm https://get.yamlr.dev/install.ps1 | iex
-```
+Integrate [**Yamlr**](https://github.com/yamlr/yamlr) directly into your local Git pre-commit workflow. Automatically detect and heal broken Kubernetes manifests, invalid API deprecations, schema mismatches, and broken cross-resource links before committing code.
 
 ---
 
-## Configuration
+## 🚀 Quick Setup
 
-Add the following to your `.pre-commit-config.yaml`:
+Add the following block to your repository's `.pre-commit-config.yaml`:
 
 ```yaml
 repos:
   - repo: https://github.com/yamlr/pre-commit-hooks
     rev: v0.1.0
     hooks:
-      # Automatically fix broken selectors, typo fields, ports, and schema deviations
-      - id: yamlr-heal
-        args: ["--apply"]
+      # Option A: Read-only clinical validation gate (blocks commits on errors)
+      - id: yamlr-check
 
-      # Strict offline audit against official Kubernetes OpenAPI schemas
-      - id: yamlr-scan
-        args: ["--fail-on", "error"]
+      # Option B: Canonical formatter (aligns spec keys to standard K8s schema order)
+      - id: yamlr-fmt
+
+      # Option C: Safe comment-preserving auto-repair (fixes issues automatically)
+      - id: yamlr-heal
+```
+
+Install the pre-commit hook in your local Git repository:
+```bash
+pre-commit install
 ```
 
 ---
 
-## Available Hooks
+## 🛠 Available Hooks
 
-| Hook ID | Description | Default Arguments |
+| Hook ID | Description | Mode |
 | :--- | :--- | :--- |
-| `yamlr-heal` | Lossless, comment-preserving auto-repair of Kubernetes manifests. | `["--apply"]` |
-| `yamlr-scan` | Read-only forensic audit against official Kubernetes OpenAPI schemas. | `["--fail-on", "error"]` |
-| `yamlr-fmt` | Canonical Kubernetes manifest formatter. Normalizes indentation and hierarchy. | `["-w"]` |
-| `yamlr-diff` | Previews color unified diff of proposed repairs without modifying files. | `["--unified"]` |
+| `yamlr-check` | Performs a read-only audit across all staged manifests. Exits with non-zero code if schema or relational violations are detected. | Read-Only |
+| `yamlr-fmt` | Formats manifest indentation and key ordering to Kubernetes OpenAPI schema conventions (`-w`). | In-Place Write |
+| `yamlr-heal` | Auto-heals deprecated API versions, broken selector ports, and missing specs while strictly preserving comments. | In-Place Write |
 
 ---
 
-## License
+## ⚙️ Advanced Configuration
 
-Yamlr is proprietary software owned by Timonel Labs. See [yamlr.dev](https://yamlr.dev) for documentation and terms.
+Pass custom flags to target specific Kubernetes versions or strictness levels:
+
+```yaml
+  - repo: https://github.com/yamlr/pre-commit-hooks
+    rev: v0.1.0
+    hooks:
+      - id: yamlr-check
+        args: ["--k8s-version", "1.31", "--fail-on", "error"]
+```
+
+---
+
+## 📚 Documentation & Issues
+
+- **Main Repository**: [github.com/yamlr/yamlr](https://github.com/yamlr/yamlr)
+- **Documentation**: [yamlr.dev/docs](https://yamlr.dev/docs)
+- **File an Issue**: [github.com/yamlr/yamlr/issues](https://github.com/yamlr/yamlr/issues)
