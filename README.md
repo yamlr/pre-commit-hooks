@@ -14,17 +14,20 @@ Add the following block to your repository's `.pre-commit-config.yaml`:
 
 ```yaml
 repos:
-  - repo: https://github.com/yamlr/pre-commit-hooks
-    rev: v0.1.0
+  - repo: https://github.com/yamlr/yamlr
+    rev: v0.1.3
     hooks:
-      # Option A: Read-only clinical validation gate (blocks commits on errors)
-      - id: yamlr-check
-
-      # Option B: Canonical formatter (aligns spec keys to standard K8s schema order)
+      # Option A: Canonical formatter (aligns spec keys to standard K8s schema order)
       - id: yamlr-fmt
 
-      # Option C: Safe comment-preserving auto-repair (fixes issues automatically)
+      # Option B: Manifest auto-repair (upgrades deprecated APIs and fixes syntax)
+      - id: yamlr-fix
+
+      # Option C: Read-only heal preview (fails with diff if repairs are needed)
       - id: yamlr-heal
+
+      # Option D: Read-only schema and relational validator gate
+      - id: yamlr-scan
 ```
 
 Install the pre-commit hook in your local Git repository:
@@ -38,9 +41,10 @@ pre-commit install
 
 | Hook ID | Description | Mode |
 | :--- | :--- | :--- |
-| `yamlr-check` | Performs a read-only audit across all staged manifests. Exits with non-zero code if schema or relational violations are detected. | Read-Only |
+| `yamlr-scan` | Performs a read-only audit across all staged manifests against official OpenAPI schemas. Exits with non-zero code on errors. | Read-Only |
 | `yamlr-fmt` | Formats manifest indentation and key ordering to Kubernetes OpenAPI schema conventions (`-w`). | In-Place Write |
-| `yamlr-heal` | Auto-heals deprecated API versions, broken selector ports, and missing specs while strictly preserving comments. | In-Place Write |
+| `yamlr-fix` | Auto-heals deprecated API versions, broken selector ports, and missing specs in-place. | In-Place Write |
+| `yamlr-heal` | Preview proposed multi-resource repairs with unified color diff without modifying files. | Read-Only |
 
 ---
 
@@ -49,11 +53,11 @@ pre-commit install
 Pass custom flags to target specific Kubernetes versions or strictness levels:
 
 ```yaml
-  - repo: https://github.com/yamlr/pre-commit-hooks
-    rev: v0.1.0
+  - repo: https://github.com/yamlr/yamlr
+    rev: v0.1.3
     hooks:
-      - id: yamlr-check
-        args: ["--k8s-version", "1.31", "--fail-on", "error"]
+      - id: yamlr-scan
+        args: ["--k8s-version", "1.36", "--fail-on", "error"]
 ```
 
 ---
