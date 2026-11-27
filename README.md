@@ -15,7 +15,7 @@ Add the following block to your repository's `.pre-commit-config.yaml`:
 ```yaml
 repos:
   - repo: https://github.com/yamlr/yamlr
-    rev: v0.1.3
+    rev: v0.1.4
     hooks:
       # Option A: Canonical formatter (aligns spec keys to standard K8s schema order)
       - id: yamlr-fmt
@@ -54,7 +54,7 @@ Pass custom flags to target specific Kubernetes versions or strictness levels:
 
 ```yaml
   - repo: https://github.com/yamlr/yamlr
-    rev: v0.1.3
+    rev: v0.1.4
     hooks:
       - id: yamlr-scan
         args: ["--k8s-version", "1.36", "--fail-on", "error"]
